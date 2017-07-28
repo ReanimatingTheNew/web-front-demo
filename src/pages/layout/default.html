@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>    
+    <title>{ block 'title' }default title{ /block }</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+{ block 'var' }
+
+{ /block }
+
+<header>
+    <h1>header</h1>
+</header>
+
+<ol>
+    <li <% if (typeof nav != 'undefined' && nav == 'nav1') { %> class="active" <% } %>>nav 1<li>
+    <li <% if (typeof nav != 'undefined' && nav == 'nav2') { %> class="active" <% } %>>nav 2<li>
+    <li <% if (typeof nav != 'undefined' && nav == 'nav3') { %> class="active" <% } %>>nav 3<li>
+    <li <% if (typeof nav != 'undefined' && nav == 'nav4') { %> class="active" <% } %>>nav 4<li>
+</ol>
+
+{ block 'body' }
+    default body
+{ /block }
+
+{ block 'side' }
+    default side
+{ /block }
+
+{ block "copyright" }
+    default copyright
+{ /block }
+
+{ include 'part/part2' }
+
+<footer>
+    <h3>footer</h3>
+</footer>
+
+</body>
+</html>

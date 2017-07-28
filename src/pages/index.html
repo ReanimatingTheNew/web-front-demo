@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+<table width="90%">
+    <tr>
+        <td>
+            <div class="dialog">
+                <h4>对话框 (layui)</h4>
+                <input type="button" id="btn11" value="默认对话框" />
+                <input type="button" id="btn12" value="OK" />
+                <input type="button" id="btn13" value="[OK, Cancel]" />
+                <input type="button" id="btn14" value="复杂按钮" />
+            </div>
+
+            <div class="msg">
+                <h4>消息框</h4>
+                <input type="button" id="btn21" value="默认" />
+                <input type="button" id="btn22" value="回调 + icon" />
+            </div>
+
+            <div class="load">
+                <h4>load</h4>
+                <input type="button" id="btn31" value="默认" />
+                <input type="button" id="btn32" value="icon" />
+            </div>
+
+            <div class="tip">
+                <h4>tip</h4>
+                <input type="button" id="btn41" value="默认" />
+            </div>
+            <div class="prompt">
+                <h4>prompt</h4>
+                <input type="button" id="btn51" value="默认" />
+            </div>
+
+            <div class="iframe">
+                <h4>iframe</h4>
+                <input type="button" id="btn61" value="默认" />
+            </div>
+        </td>
+        <td valign="top">
+            <h4>网络请求 (jQuery ajax)</h4>
+
+            <input type="button" id="btnAjax-1" value="GET" />
+            <input type="button" id="btnAjax-2" value="POST" />
+            <input type="button" id="btnAjax-3" value="PUT" />
+            <input type="button" id="btnAjax-4" value="DELETE" />
+            <input type="button" id="btnAjax-5" value="POST FILE" />
+
+            <input type="file" id="btnAjax-file" multiple style="display:none" />
+
+            <br /><br />
+            <h4>模板 (art template)</h4>
+            <input type="button" id="btnTpl-1" value="独立模板" />
+
+            <div id="tplShow"></div>
+
+            <h4>icon (css sprite)</h4>
+            <div>
+                <span class="icon icon-agree"></span>
+            </div>
+        </td>
+        <td>
+            &nbsp;
+        </td>
+    </tr>
+</table>
+
+
+<script type="text/javascript" src="assets/libs/require/require.js" data-main="assets/js/main.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "demo-jerry",
+  "version": "1.0.0",
+  "description": "demo for typescript, less, gulp .etc",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jerry",
+  "license": "ISC",
+  "devDependencies": {
+    "ejs": "^2.5.6",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-clean-css": "^3.7.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-less": "^3.3.2",
+    "gulp-rev": "^7.1.2",
+    "gulp-tmod": "^2.0.3",
+    "gulp-typescript": "^3.2.1",
+    "gulp-uglify": "^3.0.0",
+    "gulp.spritesmith": "^6.5.1",
+    "typescript": "^2.4.2"
+  }
+}
