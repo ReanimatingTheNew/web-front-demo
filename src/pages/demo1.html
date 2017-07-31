@@ -1,45 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>    
-    <title>demo1 title</title>
-    <meta charset="UTF-8">
-</head>
-<body>
+{ extends "layout/default" }
 
+{ block 'var' }
+    <%
+        var nav = 'nav1';
+    %>
+{ /block }
 
-
-<header>
-    <h1>header</h1>
-</header>
-
-<ol>
-    <li  class="active" >nav 1<li>
-    <li >nav 2<li>
-    <li >nav 3<li>
-    <li >nav 4<li>
-</ol>
-
-demo1 page body
+{ block "body" }
+    demo1 page body
     
-    <div>
-    include part1
-</div>
+    { include "part/part1" }
+{ /block }
 
-
-    default side
-
-
-
-    default copyright
-
-
-<div>
-    include part2
-</div>
-
-<footer>
-    <h3>footer</h3>
-</footer>
-
-</body>
-</html>

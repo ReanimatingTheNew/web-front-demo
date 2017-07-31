@@ -293,6 +293,8 @@ function copyLibs(path) {
     setTimeout(() => {
         if (os.platform() == 'linux') {
             exec('cp -R assets/libs/ '+ path +'/assets/');
+        } else if (os.platform() == 'darwin') {
+            exec('cp -R assets/libs/ '+ path +'/assets/libs/');
         } else {
             exec('xcopy /EY assets '+ path +'\\assets\\');
         }

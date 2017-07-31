@@ -1,37 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>    
-    <title>demo2 title</title>
-    <meta charset="UTF-8">
-</head>
-<body>
+{ extends "layout/default" }
 
+{ block 'var' }
+    <%
+        var nav = 'nav2';
+    %>
+{ /block }
 
+{ block "body" }
+    demo2 page body
+    
+    { include "part/part2" }
+{ /block }
 
-<header>
-    <h1>header</h1>
-</header>
+{ block "side" }
+    demo side
 
-<ol>
-    <li >nav 1<li>
-    <li  class="active" >nav 2<li>
-    <li >nav 3<li>
-    <li >nav 4<li>
-</ol>
+{ /block }
 
-demo2 page body
-
-demo2 side
-
-demo2 copyright
-
-<div>
-    include part2
-</div>
-
-<footer>
-    <h3>footer</h3>
-</footer>
-
-</body>
-</html>
