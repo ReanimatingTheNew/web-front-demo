@@ -117,12 +117,13 @@ gulp.task('publishHtml', ['hashJsCss'], () => {
         .pipe(gulp.dest(projectConfig.distRootDir));
 });
 
-//拷贝图片
+//拷贝静态文件(发开环境)
 gulp.task('copyAssetDev', () => {
     return gulp.src(projectConfig.assetSrc)
         .pipe(gulp.dest(projectConfig.devAsset));
 });
 
+//拷贝静态文件(线上环境)
 gulp.task('copyAssetDist', () => {
     return gulp.src(projectConfig.assetSrc)
         .pipe(gulp.dest(projectConfig.distAsset));
@@ -168,7 +169,7 @@ gulp.task('watch', () =>{
     gulp.watch(projectConfig.watchLessDir, ['less']);
     gulp.watch(projectConfig.tplFileSrc, ['tpl']);
     gulp.watch(projectConfig.pageSrc, ['page']);
-    gulp.watch(projectConfig.imageSrc, ['copyImageDev']);
+    gulp.watch(projectConfig.assetSrc, ['copyAssetDev']);
 });
 
 //修正requirejs打包，添加模块名称
