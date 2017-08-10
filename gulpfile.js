@@ -19,13 +19,16 @@ let projectConfig = {
     devRootDir: 'dev/',    //开发环境根目录
     distRootDir: 'dist/',   //线上环境目录,
 
-    imageSrc: ['assets/images/*', 'assets/images/*/*'],  //图片源文件目录
+    assetSrc: ['assets/**/*'],  //静态文件目录
+    devAsset: 'dev/assets/',   //静态文件目录(发开环境)
+    distAsset: 'dist/assets/',  //静态文件目录(线上环境)
+    devImageDst: 'dev/assets/images/',  //图片静态文件目录(发开环境)
+
     lessFileSrc: 'src/less/',   //less源文件目录
     lessFileSrcFiles: ['src/less/global.less', 'src/less/style.less'],   //需要编译为css的less源文件
     cssFileDst: 'dev/assets/css/',  //生成css的文件目录
 
     cssIconSrc: 'src/images/icons/*.png', //需要生成sprite的icon文件目录
-    devImageDst: 'dev/assets/images/', //image的保存目录
 
     tsFileSrc: 'src/ts/', //typescript源文件目录
     jsFileDst: 'dev/assets/js/',   //生成js的文件目录
@@ -36,7 +39,6 @@ let projectConfig = {
     pageRoot: 'src/pages/', //需要处理layout、include等html文件根目录
     pageSrc: ['src/pages/*.html', 'src/pages/v*/*.html'], //需要处理layout、include等html文件目录
 
-    publishImageDst: 'dist/assets/images/', //image的保存目录
     publishCssSrc: ['dev/assets/css/*.css'],    //css源文件目录
     publishCssDst: 'dist/assets/css',  //压缩后的css文件目录
     publishJsSrc: ['dev/assets/js/*/*.js', 'dev/assets/js/*.js'], //js源文件目录
@@ -100,7 +102,7 @@ gulp.task('publishJs', [], () => {
 });
 
 //生成js/css添加hash值
-gulp.task('hashJsCss', ['publishCss', 'publishJs'], () => {
+gulp.task('hashJsCss', ['copyAssetDist', 'publishCss', 'publishJs'], () => {
     return gulp.src([projectConfig.publishCssDst +'/*.css', projectConfig.publishJsDst +'/*.js'])
         .pipe(rev())
         .pipe(rev.manifest({path:'manifest.json'}))
@@ -116,14 +118,14 @@ gulp.task('publishHtml', ['hashJsCss'], () => {
 });
 
 //拷贝图片
-gulp.task('copyImageDev', () => {
-    return gulp.src(projectConfig.imageSrc)
-        .pipe(gulp.dest(projectConfig.devImageDst));
+gulp.task('copyAssetDev', () => {
+    return gulp.src(projectConfig.assetSrc)
+        .pipe(gulp.dest(projectConfig.devAsset));
 });
 
-gulp.task('copyImageDist', () => {
-    return gulp.src(projectConfig.devImageDst +'*')
-        .pipe(gulp.dest(projectConfig.publishImageDst));
+gulp.task('copyAssetDist', () => {
+    return gulp.src(projectConfig.assetSrc)
+        .pipe(gulp.dest(projectConfig.distAsset));
 });
 
 //生成模板 (arttemplate)
@@ -150,16 +152,13 @@ gulp.task('clean', () => {
 
 //发布项目: 开发环境
 gulp.task('publishDev', ['clean'], () => {
-    exec('gulp less typescript tpl page copyImageDev');
-
-    copyLibs(projectConfig.devRootDir);
+    exec('gulp less typescript tpl page copyAssetDev');
 });
 
 //发布项目: 线上环境
 gulp.task('publish', ['publishDev'], () => {
     setTimeout(() => {
-        exec('gulp publishHtml copyImageDist');
-        copyLibs(projectConfig.distRootDir);
+        exec('gulp publishHtml');
     }, 5000);
 });
 
@@ -292,20 +291,6 @@ function handlePage(filename) {
     }
 
     return ejs.render(pageContent).trim();
-}
-
-//拷贝类库
-function copyLibs(path) {
-    "use strict";
-    setTimeout(() => {
-        if (os.platform() == 'linux') {
-            exec('cp -R assets/libs/ '+ path +'/assets/');
-        } else if (os.platform() == 'darwin') {
-            exec('cp -R assets/libs/ '+ path +'/assets/libs/');
-        } else {
-            exec('xcopy /EY assets '+ path +'\\assets\\');
-        }
-    }, 2000);
 }
 
 //修正arttemplate，添加模块名称
