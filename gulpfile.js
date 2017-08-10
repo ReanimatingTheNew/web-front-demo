@@ -11,7 +11,8 @@ let gulp = require('gulp'),
     clean = require('gulp-clean'),
     tpl = require('gulp-tmod'),
     ejs = require('ejs'),
-    os = require('os');
+    os = require('os'),
+    path = require('path'),
     exec = require('child_process').exec;
 
 let projectConfig = {
@@ -33,7 +34,7 @@ let projectConfig = {
     tplFileSrc: ['src/tpl/*.html'], //模板目录
 
     pageRoot: 'src/pages/', //需要处理layout、include等html文件根目录
-    pageSrc: ['src/pages/*.html', 'src/pages/n*/*.html'], //需要处理layout、include等html文件目录
+    pageSrc: ['src/pages/*.html', 'src/pages/v*/*.html'], //需要处理layout、include等html文件目录
 
     publishImageDst: 'dist/assets/images/', //image的保存目录
     publishCssSrc: ['dev/assets/css/*.css'],    //css源文件目录
@@ -134,6 +135,8 @@ gulp.task('tpl', () => {
 
 //处理HTML的layout
 gulp.task('page', () => {
+    //设置语言,可通过增加gulp.task控制生成的语言版本
+    process.env.lang = 'cn';
     return gulp.src(projectConfig.pageSrc)
         .pipe(fixPage())
         .pipe(gulp.dest(projectConfig.devRootDir));
@@ -274,7 +277,11 @@ function handlePage(filename) {
                 let item = val.match(/{\s*include\s*['"](.*)['"]\s*}/);
                 if (item != null) {
                     let filename = item[1],
-                        content = getContent(projectConfig.pageRoot + filename +'.html');
+                        ext = path.extname(filename);
+                    if (ext == '') {
+                        filename += '.html';
+                    }
+                    let content = getContent(projectConfig.pageRoot + filename);
 
                     //替换include的内容
                     let reg = new RegExp("{\\s*include\s* ['\"]"+ filename +"['\"]\\s*}");
@@ -284,7 +291,7 @@ function handlePage(filename) {
         }
     }
 
-    return ejs.render(pageContent);
+    return ejs.render(pageContent).trim();
 }
 
 //拷贝类库

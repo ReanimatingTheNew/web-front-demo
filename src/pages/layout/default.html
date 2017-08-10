@@ -1,24 +1,29 @@
+{ block 'lang' }
+    <%
+     { include 'lang/lang.js' }
+    %>
+{ /block}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>    
-    <title>{ block 'title' }default title{ /block }</title>
+    <title>{ block 'title' }default title <%= langs[LANG].title %> { /block }</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/assets/css/global.css" />
+    <link rel="stylesheet" href="/assets/css/<%= langs[LANG].path %>.css" />
 </head>
 <body>
-
-{ block 'var' }
-
-{ /block }
 
 <header>
     <h1>header</h1>
 </header>
 
 <ol>
-    <li <% if (typeof nav != 'undefined' && nav == 'nav1') { %> class="active" <% } %>>nav 1<li>
-    <li <% if (typeof nav != 'undefined' && nav == 'nav2') { %> class="active" <% } %>>nav 2<li>
-    <li <% if (typeof nav != 'undefined' && nav == 'nav3') { %> class="active" <% } %>>nav 3<li>
-    <li <% if (typeof nav != 'undefined' && nav == 'nav4') { %> class="active" <% } %>>nav 4<li>
+    <% langs[LANG].navs.forEach((nav) => { %>
+     <li <% if (typeof nav != 'undefined' && nav == 'nav1') { %> class="active" <% } %>>
+        <a href="<%= nav.link %>"><%= nav.name %></a>
+     </li>
+    <% }) %>
 </ol>
 
 { block 'body' }
@@ -29,15 +34,12 @@
     default side
 { /block }
 
-{ block "copyright" }
-    default copyright
-{ /block }
 
-{ include 'part/part2' }
 
 <footer>
     <h3>footer</h3>
 </footer>
 
+<script src="/assets/libs/require/require.js" data-main="/assets/js/main.js"></script>
 </body>
 </html>
