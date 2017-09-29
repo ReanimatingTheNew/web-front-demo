@@ -10,16 +10,23 @@ step 2.安装所有依赖
     npm install
 
 step 3. 开发环境使用
-    1. 如果没有使用IDE生成css、js等功能，则需要监听开发环境，less生成css、typescript生成javascriptt等
-    gulp watch
+    1. 如果没有使用IDE生成css、js等功能，则需要监听开发环境，less生成css、typescript生成javascript等
+    //监听中文开发环境
+    gulp watchCn
+    //或监听中文开发环境
+    gulp watchEn
+
 
 step 4. 发布项目
     1. 在项目根目录运行：
-        gulp publish
+        //发布中文开发环境
+        gulp publishCn
+        //或发布中文开发环境
+        gulp publishEn
     2. 将dist目录所有文件发布到测试或线上环境
 
 step 5. 本地调试
-    设置两个虚拟主机目录，分别映射到dev与dist目录
+    设置两个虚拟主机目录，分别映射到dev(开发环境)与dist(线上环境)目录
 
 二、模块使用说明
     1. layout使用
@@ -31,14 +38,25 @@ step 5. 本地调试
         ejs模板语法
     3. css sprite使用
         将所有icon图片保存在src/images/icons/目录中，运行"gulp cssSprite"，将生成sprite.less与sprite.png，
-        sprite.less使用“.icon-{文件名}”的方式命名
+        sprite.less中使用“.icon-{文件名}”的方式命名
+
+三、目录说明
+    1. assets/: 静态文件目录，如图片、js类库等，不需要程序处理的文件
+    2. src/: 源文件目录，如ts、less等，需要使用程序处理的文件
+        2.1 src/d.ts/: ts定义文件
+        2.2 src/images/icons/: 需要生成sprite图片的icon文件
+        2.3 src/js/: js文件，(如果不使用ts开发)，与ts文件二选一
+        2.4 src/less/: less文件
+        2.5 src/pages/: HTML文件
+        2.6 src/tpl/: js使用的模板文件
+        2.7 src/ts/: ts文件，与js文件二选一
 
 附：
 step 1. 初始化项目
 	npm init
 
-step 2. 安装本地gulp
-	npm install --save-dev gulp
+step 2. 安装gulp
+	npm install --global gulp
 
 step 3. 项目依赖说明：
 	npm install	--save-dev plugin-name

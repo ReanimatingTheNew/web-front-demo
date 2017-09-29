@@ -19,7 +19,7 @@ let projectConfig = {
     devRootDir: 'dev/',    //开发环境根目录
     distRootDir: 'dist/',   //线上环境目录,
 
-    assetSrc: ['assets/**/*'],  //静态文件目录
+    assetSrc: 'assets/**/*',  //静态文件目录
     devAsset: 'dev/assets/',   //静态文件目录(发开环境)
     distAsset: 'dist/assets/',  //静态文件目录(线上环境)
     devImageDst: 'dev/assets/images/',  //图片静态文件目录(发开环境)
@@ -31,26 +31,26 @@ let projectConfig = {
     cssIconSrc: 'src/images/icons/*.png', //需要生成sprite的icon文件目录
 
     tsFileSrc: 'src/ts/', //typescript源文件目录
+    jsFileSrc: 'src/js/**/*.js', //js源文件目录
     jsFileDst: 'dev/assets/js/',   //生成js的文件目录
 
     tplFileBase: 'src/tpl', //模板文件根目录
-    tplFileSrc: ['src/tpl/*.html'], //模板目录
+    tplFileSrc: 'src/tpl/**/*.html', //模板目录
 
     pageRoot: 'src/pages/', //需要处理layout、include等html文件根目录
     pageSrc: ['src/pages/*.html', 'src/pages/v*/*.html'], //需要处理layout、include等html文件目录
 
     publishCssSrc: ['dev/assets/css/*.css'],    //css源文件目录
     publishCssDst: 'dist/assets/css',  //压缩后的css文件目录
-    publishJsSrc: ['dev/assets/js/*/*.js', 'dev/assets/js/*.js'], //js源文件目录
+    publishJsSrc: ['dev/assets/js/**/*.js', 'dev/assets/js/*.js'], //js源文件目录
     publishJsDst: 'dist/assets/js/',   //压缩后的js文件目录
     publishJsDstName: 'main.js', //压缩、合并后js文件名
 
     htmlSrc: ['dev/*.html', 'dev/*/*.html'], //html源文件目录
-
     tmpDir: ['dist/', 'dev/'],  //临时文件夹
 
-    watchTsDir: ['src/ts/*.ts', 'src/ts/libs/*.ts'], //监听的less目录
-    watchLessDir: ['src/less/*.less'] //监听的typescript目录
+    watchTsDir: 'src/ts/**/*.ts', //监听的typescript目录
+    watchLessDir: 'src/less/*.less' //监听的less目录
 };
 
 //生成css sprite
@@ -69,19 +69,25 @@ gulp.task('cssSprite', function () {
 });
 
 //less生成css
-gulp.task('less', ['cssSprite'], () => {
+gulp.task('less', () => {
     return gulp.src(projectConfig.lessFileSrcFiles)
         .pipe(less())
         .pipe(gulp.dest(projectConfig.cssFileDst));
 });
 
 //typescript生成javascript (requirejs加载器)
-gulp.task('typescript',  () => {
+gulp.task('typescript', () => {
     let tsConfig = typescript.createProject('tsconfig.json');
     return tsConfig.src()
         .pipe(tsConfig())
         .js
         .pipe(fixRequirejs())
+        .pipe(gulp.dest(projectConfig.jsFileDst));
+});
+
+//将js文件复制到开发环境目录
+gulp.task('js', () => {
+    return gulp.src(projectConfig.jsFileSrc)
         .pipe(gulp.dest(projectConfig.jsFileDst));
 });
 
@@ -124,9 +130,15 @@ gulp.task('copyAssetDev', () => {
 });
 
 //拷贝静态文件(线上环境)
-gulp.task('copyAssetDist', () => {
+gulp.task('copyAssetDist', ['copyCssSpriteDist'], () => {
     return gulp.src(projectConfig.assetSrc)
         .pipe(gulp.dest(projectConfig.distAsset));
+});
+
+//拷贝css sprite(线上环境),
+gulp.task('copyCssSpriteDist', () => {
+    return gulp.src(projectConfig.devImageDst +'sprite.png')
+        .pipe(gulp.dest(projectConfig.distAsset +'images/'));
 });
 
 //生成模板 (arttemplate)
@@ -138,8 +150,6 @@ gulp.task('tpl', () => {
 
 //处理HTML的layout
 gulp.task('page', () => {
-    //设置语言,可通过增加gulp.task控制生成的语言版本
-    process.env.lang = 'cn';
     return gulp.src(projectConfig.pageSrc)
         .pipe(fixPage())
         .pipe(gulp.dest(projectConfig.devRootDir));
@@ -153,29 +163,78 @@ gulp.task('clean', () => {
 
 //发布项目: 开发环境
 gulp.task('publishDev', ['clean'], () => {
-    exec('gulp less typescript tpl page copyAssetDev');
+    let lang = process.env.lang;
+    if (!lang) {
+        process.env.lang = 'cn';
+    }
+
+    exec('gulp cssSprite');
+    setTimeout(() => {
+        exec('gulp less typescript tpl page copyAssetDev');
+    }, 3000);
+});
+
+//发布项目: 开发环境(中文)
+gulp.task('publishDevCn', () => {
+    process.env.lang = 'cn';
+    exec('gulp publishDev')
+});
+
+//发布项目: 开发环境(英文)
+gulp.task('publishDevEn', () => {
+    process.env.lang = 'en';
+    exec('gulp publishDev')
 });
 
 //发布项目: 线上环境
 gulp.task('publish', ['publishDev'], () => {
+    exec('gulp publishCn');
+});
+
+//发布项目: 线上环境(中文)
+gulp.task('publishCn', ['publishDevCn'], () => {
     setTimeout(() => {
         exec('gulp publishHtml');
-    }, 5000);
+    }, 8000);
+});
+
+//发布项目: 线上环境(英文)
+gulp.task('publishEn', ['publishDevEn'], () => {
+    setTimeout(() => {
+        exec('gulp publishHtml');
+    }, 8000);
 });
 
 //监听开发环境
 gulp.task('watch', () =>{
+    let lang = process.env.lang;
+    if (!lang) {
+        process.env.lang = 'cn';
+    }
+
     gulp.watch(projectConfig.watchTsDir, ['typescript']);
+    //gulp.watch(projectConfig.jsFileSrc, ['js']);    //与typescript二选一
+    gulp.watch(projectConfig.cssIconSrc, ['cssSprite']);
     gulp.watch(projectConfig.watchLessDir, ['less']);
     gulp.watch(projectConfig.tplFileSrc, ['tpl']);
     gulp.watch(projectConfig.pageSrc, ['page']);
     gulp.watch(projectConfig.assetSrc, ['copyAssetDev']);
 });
 
-//修正requirejs打包，添加模块名称
+gulp.task('watchCn', () =>{
+    process.env.lang = 'cn';
+    exec('gulp watch');
+});
+
+gulp.task('watchEn', () =>{
+    process.env.lang = 'en';
+    exec('gulp watch');
+});
+
+//修正requirejs打包，添加模块名称， window与linux目录不同，需要在window下测试
 function fixRequirejs() {
     return through.obj(function (file, enc, cb) {
-        let filename = file.path.replace(file.base, '').replace('.js', '');
+        let filename = file.path.replace(file.base.replace(/\\/g, '\/'), '').replace('.js', '');
         let str = file.contents.toString().replace('define(', 'define("'+ filename +'",');
         file.contents = new Buffer(str);
         return cb(null, file);
@@ -262,7 +321,6 @@ function handlePage(filename) {
                     layout = layout.replace(reg, blockContent);
                 }
             });
-            //console.info(layout);
 
             //未被替换的block，使用默认内容
             layout = layout.replace(/{\s*block\s*['"](.*)['"]\s*}/g, '');
