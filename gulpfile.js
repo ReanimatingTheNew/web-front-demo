@@ -25,7 +25,7 @@ let projectConfig = {
     devImageDst: 'dev/assets/images/',  //图片静态文件目录(发开环境)
 
     lessFileSrc: 'src/less/',   //less源文件目录
-    lessFileSrcFiles: ['src/less/global.less', 'src/less/style.less'],   //需要编译为css的less源文件
+    lessFileSrcFiles: 'src/less/style.less',   //需要编译为css的less源文件
     cssFileDst: 'dev/assets/css/',  //生成css的文件目录
 
     cssIconSrc: 'src/images/icons/*.png', //需要生成sprite的icon文件目录
@@ -38,15 +38,15 @@ let projectConfig = {
     tplFileSrc: 'src/tpl/**/*.html', //模板目录
 
     pageRoot: 'src/pages/', //需要处理layout、include等html文件根目录
-    pageSrc: ['src/pages/*.html', 'src/pages/v*/*.html'], //需要处理layout、include等html文件目录
+    pageSrc: ['src/pages/**/*.html', '!src/pages/layout/*'], //需要处理layout、include等html文件目录
 
-    publishCssSrc: ['dev/assets/css/*.css'],    //css源文件目录
+    publishCssSrc: 'dev/assets/css/*.css',    //css源文件目录
     publishCssDst: 'dist/assets/css',  //压缩后的css文件目录
-    publishJsSrc: ['dev/assets/js/**/*.js', 'dev/assets/js/*.js'], //js源文件目录
+    publishJsSrc: 'dev/assets/js/**/*.js', //js源文件目录
     publishJsDst: 'dist/assets/js/',   //压缩后的js文件目录
     publishJsDstName: 'main.js', //压缩、合并后js文件名
 
-    htmlSrc: ['dev/*.html', 'dev/*/*.html'], //html源文件目录
+    htmlSrc: 'dev/**/*.html', //html源文件目录
     tmpDir: ['dist/', 'dev/'],  //临时文件夹
 
     watchTsDir: 'src/ts/**/*.ts', //监听的typescript目录
